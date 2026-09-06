@@ -1,0 +1,14 @@
+{
+  "name": "saksham-arora",
+  "version": "1.0.0",
+  "description": "Saksham Arora's calling card, in your terminal. npx saksham-arora",
+  "bin": { "saksham-arora": "bin/cli.js" },
+  "type": "commonjs",
+  "files": ["bin", "src", "README.md"],
+  "engines": { "node": ">=18" },
+  "keywords": ["cli", "resume", "card", "portfolio", "npx", "terminal", "tui"],
+  "author": "Saksham Arora <saksham10arora@gmail.com> (https://saksham.digital)",
+  "license": "MIT",
+  "homepage": "https://saksham.digital",
+  "repository": { "type": "git", "url": "git+https://github.com/saksham10arora-dotcom/saksham-cli.git" }
+}
