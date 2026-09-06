@@ -43,7 +43,6 @@ function openUrl(url) {
 }
 
 const pad = (s, n) => (s.length >= n ? s.slice(0, n) : s + " ".repeat(n - s.length));
-const clip = (s, n) => (s.length <= n ? s : s.slice(0, n - 1).trimEnd() + "…");
 
 function buildLines({ cursor, stats, note, static: isStatic }) {
   const L = [];
@@ -61,20 +60,14 @@ function buildLines({ cursor, stats, note, static: isStatic }) {
     L.push("  " + t.dim("saksham.digital  ·  npx saksham-arora"));
     return L;
   }
-  if (stats && stats.recent.length) {
-    L.push("  " + t.dim("recent"));
-    stats.recent.slice(0, 3).forEach((r) => {
-      const room = Math.max(24, Math.min(46, (process.stdout.columns || 80) - 24));
-      L.push("    " + t.soft(pad(r.name, 15)) + t.dim(clip(r.desc, room)));
-    });
-    L.push("");
+  if (stats) {
     const bits = [];
     if (stats.repos != null) bits.push(`${stats.repos} repos`);
     if (stats.followers != null) bits.push(`${stats.followers} followers`);
     bits.push("live from github");
     L.push("  " + t.dim(bits.join(" · ")));
   } else {
-    L.push("  " + t.dim(stats === undefined ? "fetching live data…" : "offline · showing the card only"));
+    L.push("  " + t.dim(stats === undefined ? "fetching live data…" : "offline"));
   }
   L.push("");
   L.push("  " + t.dim("↑↓ move   ⏎ open   g  ???   q quit"));

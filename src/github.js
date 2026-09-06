@@ -10,25 +10,10 @@ async function fetchStats(timeoutMs = 2800) {
     signal: AbortSignal.timeout(timeoutMs),
   };
   try {
-    const [user, repos] = await Promise.all([
-      fetch(`https://api.github.com/users/${USER}`, opts).then((r) => (r.ok ? r.json() : null)),
-      fetch(`https://api.github.com/users/${USER}/repos?sort=pushed&per_page=10`, opts)
-        .then((r) => (r.ok ? r.json() : null)),
-    ]);
-    if (!user && !repos) return null;
-    const recent = Array.isArray(repos)
-      ? repos.filter((r) => !r.fork).slice(0, 4).map((r) => ({
-          name: r.name,
-          desc: (r.description || "").trim(),
-          pushed: r.pushed_at,
-          stars: r.stargazers_count,
-        }))
-      : [];
-    return {
-      repos: user ? user.public_repos : null,
-      followers: user ? user.followers : null,
-      recent,
-    };
+    const user = await fetch(`https://api.github.com/users/${USER}`, opts)
+      .then((r) => (r.ok ? r.json() : null));
+    if (!user) return null;
+    return { repos: user.public_repos, followers: user.followers };
   } catch {
     return null;
   }
