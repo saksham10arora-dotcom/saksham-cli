@@ -9,7 +9,7 @@ const WIDTH = 52;
 
 const ITEMS = [
   { label: "portfolio", hint: "saksham.digital", url: "https://saksham.digital" },
-  { label: "writing", hint: "blog.saksham.digital", url: "https://blog.saksham.digital" },
+  { label: "writing", hint: "saksham.digital/blog", url: "https://saksham.digital/blog" },
   { label: "github", hint: "@saksham10arora-dotcom", url: "https://github.com/saksham10arora-dotcom" },
   { label: "linkedin", hint: "in/saksham-arora10", url: "https://www.linkedin.com/in/saksham-arora10" },
   { label: "email", hint: "saksham10arora@gmail.com", url: "mailto:saksham10arora@gmail.com" },
@@ -46,7 +46,7 @@ const pad = (s, n) => (s.length >= n ? s.slice(0, n) : s + " ".repeat(n - s.leng
 
 function buildLines({ cursor, stats, note, static: isStatic }) {
   const L = [];
-  L.push("  " + t.bright("data science") + t.dim(" · ") + t.bright("quant research"));
+  L.push("  " + t.bright("data science") + t.dim(" · ") + t.bright("quant research") + t.dim(" · ") + t.bright("AI engineering"));
   L.push("  " + t.dim("IIT Madras BS + GGSIPU B.Tech, run in parallel"));
   L.push("");
   ITEMS.forEach((it, i) => {
@@ -84,10 +84,13 @@ async function run(stream) {
   let prev = 0;
   let busy = false;
 
+  /* A line longer than the terminal wraps onto extra rows. Count real rows,
+     not lines, or the cursor stops short on redraw and old lines pile up. */
+  const rowsOf = (l) => Math.max(1, Math.ceil(l.replace(/\x1b\[[0-9;?]*[A-Za-z]/g, "").length / (stream.columns || 80)));
   const render = () => {
     const lines = buildLines({ cursor, stats, note });
     const out = (prev ? t.up(prev) : "") + lines.map((l) => t.clearLine + l).join("\n") + "\n";
-    prev = lines.length;
+    prev = lines.reduce((n, l) => n + rowsOf(l), 0);
     stream.write(out);
   };
 
